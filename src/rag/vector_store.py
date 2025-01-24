@@ -3,16 +3,31 @@ import weaviate
 from langchain_weaviate.vectorstores import WeaviateVectorStore
 from langchain_core.documents import Document
 import os
+from weaviate.embedded import EmbeddedOptions
+
 
 class VectorDatebase:
     def __init__(self, embedding) -> None:
         self.index_name = "weaviate_comfyui_workflow"
         self.text_key = "embedded_description"
         self.embedding = embedding
+
+
+        client = weaviate.WeaviateClient(
+            embedded_options=EmbeddedOptions(
+                additional_env_vars={
+                    "ENABLE_MODULES": "backup-filesystem,text2vec-openai,text2vec-cohere,text2vec-huggingface,ref2vec-centroid,generative-openai,qna-openai",
+                    "BACKUP_FILESYSTEM_PATH": "./backups"
+                }
+            )
+            # Add additional options here (see Python client docs for syntax)
+        )
+
+        client.connect() 
         
-        client = weaviate.connect_to_local(
-            host=os.environ["WEAVIATE_HOST"],
-        )            
+        # client = weaviate.connect_to_local(
+        #     host=os.environ["WEAVIATE_HOST"],
+        # )            
         
         self.vector_store=WeaviateVectorStore(
             client=client,

@@ -1,0 +1,11 @@
+langchain
+langchain-community
+python-dotenv
+langchain-google-genai
+langchain-openai
+nltk
+fastapi
+uvicorn
+pydantic
+weaviate-client
+langchain_weaviate
